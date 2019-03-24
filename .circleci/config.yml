@@ -24,12 +24,16 @@ jobs:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
+  test:
+    docker:
+      - image: circleci/node:9.9
+    steps:
+      - checkout
       - run:
           name: build nuxt app
           command: |
-            nuxt run build
-            nuxt run generate
-  test:
+            npm run build
+            npm run generate
       - run: # run tests
           name: test
           command: npm run test
