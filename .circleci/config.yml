@@ -60,9 +60,9 @@ jobs:
       - run:
           name: Deploy to Firebase
           command: |
-          echo "${FIREBASE_TOKEN}"
-          echo <<parameters.token>>
-          ./firebase-deploy/node_modules/.bin/firebase deploy --token=<<parameters.token>>
+            echo "${FIREBASE_TOKEN}"
+            echo <<parameters.token>>
+            ./firebase-deploy/node_modules/.bin/firebase deploy --token=<<parameters.token>>
 
 workflows: 
   version: 2.1
