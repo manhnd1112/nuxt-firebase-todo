@@ -1,6 +1,5 @@
 import VuetifyLoaderPlugin from 'vuetify-loader/lib/plugin'
 import pkg from './package'
-
 export default {
   mode: 'universal',
 
