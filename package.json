@@ -9,7 +9,7 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
-    "test": "jest --json --outputFile=test/results/test_result.json"
+    "test": "jest --json --outputFile=test/results/test_result.json --maxWorkers=2"
   },
   "dependencies": {
     "cross-env": "^5.2.0",
