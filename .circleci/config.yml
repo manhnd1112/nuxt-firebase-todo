@@ -20,6 +20,7 @@ jobs:
           name: install-npm-wee
           command: 
             npm install 
+            npm rebuild
       - save_cache: # special step to save the dependency cache
           key: dependency-cache-{{ .Branch }}-{{ checksum "package.json" }}
           paths:
@@ -58,7 +59,10 @@ jobs:
           command: npm install --prefix=./firebase-deploy firebase-tools
       - run:
           name: Deploy to Firebase
-          command: ./firebase-deploy/node_modules/.bin/firebase deploy --token=<<parameters.token>>
+          command: |
+          echo "${FIREBASE_TOKEN}"
+          echo <<parameters.token>>
+          ./firebase-deploy/node_modules/.bin/firebase deploy --token=<<parameters.token>>
 
 workflows: 
   version: 2.1
