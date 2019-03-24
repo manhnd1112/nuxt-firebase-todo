@@ -1,4 +1,4 @@
-# https://circleci.com/orbs/registry/licensing for details.
+# https://circleci.com/orbs/registry/licensing for details. 
 version: 2.1
 description: Orb for firebase deploy.
 orbs:
@@ -25,15 +25,20 @@ jobs:
           paths:
             - ./node_modules
   test:
+    working_directory: ~/nuxt-firebase-todo
     docker:
       - image: circleci/node:9.9
     steps:
       - checkout
       - run:
-          name: build nuxt app
+          name: build-nuxt-app
           command: |
             npm run build
             npm run generate
+      - persist_to_workspace:
+          root: ~/nuxt-firebase-todo
+          paths:
+            - dist/*
       - run: # run tests
           name: test
           command: npm run test
@@ -42,13 +47,18 @@ jobs:
           path: test/results/test_result.json
           prefix: tests
   deploy:
-    description: Deploy to firebase
+    working_directory: ~/nuxt-firebase-todo
+    docker:
+      - image: circleci/node:9.9
     parameters:
       token:
         type: string
         default: "${FIREBASE_TOKEN}"
         description: Firebase Deploy Token
     steps:
+      - checkout
+      - attach_workspace:
+          at: /dist
       - run:
           name: Install Firebase Tools
           command: npm install --prefix=./firebase-deploy firebase-tools
