@@ -3,14 +3,46 @@ version: 2.1
 description: Orb for firebase deploy.
 orbs:
   firebase-deploy: cloudliner/firebase-deploy@0.0.2
-commands:
+jobs:
   build: 
-    
+    working_directory: ~/nuxt-firebase-todo
+    docker:
+      - image: circleci/node:9.9
+    steps:
+      - checkout
+      - run:
+          name: update-npm
+          command: 'sudo npm install -g npm@latest'
+      - restore_cache: # special step to restore the dependency cache
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: install-npm-wee
+          command: 
+            npm install 
+      - save_cache: # special step to save the dependency cache
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: build nuxt app
+          command: |
+            nuxt run build
+            nuxt run generate
+  test:
+      - run: # run tests
+          name: test
+          command: npm run test
+      - store_artifacts: # special step to save test results as as artifact
+          # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/ 
+          path: test/results/test_result.json
+          prefix: tests
   deploy:
     description: Deploy to firebase
     parameters:
       token:
         type: string
+        default: "${FIREBASE_TOKEN}"
         description: Firebase Deploy Token
     steps:
       - run:
@@ -18,4 +50,18 @@ commands:
           command: npm install --prefix=./firebase-deploy firebase-tools
       - run:
           name: Deploy to Firebase
-          command: ./firebase-deploy/node_modules/.bin/firebase deploy --token=<< parameters.token >>
+          command: ./firebase-deploy/node_modules/.bin/firebase deploy --token=<<parameters.token>>
+
+workflows: 
+  version: 2.1
+  build_and_deploy:
+    jobs:
+      - build
+      - test
+      - deploy:
+          requires:
+            - build
+            - test
+          filters:
+            branches:
+              only: master

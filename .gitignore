@@ -82,4 +82,6 @@ dist
 
 # Service worker
 sw.*
+
 .firebase
+test/results
