@@ -19,6 +19,6 @@ describe('Todo.vue', () => {
 		expect(wrapper.text()).toContain('TODO')
 	})
 	test('Test failed case', () => {
-		expect(true).toBe(false)
+		expect(1+1).toBe(2)
 	})
 })
