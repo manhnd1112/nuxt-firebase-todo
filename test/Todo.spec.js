@@ -15,7 +15,10 @@ describe('Todo.vue', () => {
 	test('Setup correctly', () => {
 		expect(true).toBe(true)
 	})
-	test('Test render View', async () => {
+	test('Test render View', () => {
 		expect(wrapper.text()).toContain('TODO')
+	})
+	test('Test failed case', () => {
+		expect(true).toBe(false)
 	})
 })
