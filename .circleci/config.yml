@@ -68,7 +68,7 @@ workflows:
     jobs:
       - build_and_test
       - deploy:
-          type: approval
+          #type: approval
           requires:
             - build_and_test
           filters:
